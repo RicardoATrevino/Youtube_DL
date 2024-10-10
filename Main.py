@@ -7,7 +7,7 @@ import yt_dlp
 def startDownload():
     try:
         ytlink = link.get()
-        output_path = "C:/Users/Yt_MP3/%(title)s.%(ext)s"
+        output_path = "C:/Users/Ricky/Documents/Yt_MP3/%(title)s.%(ext)s"
         command = ["yt-dlp", ytlink, "-o", output_path ]
         process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         stdout, stderr = process.communicate()
