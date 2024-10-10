@@ -89,13 +89,17 @@ link = customtkinter.CTkEntry(app, width=350, height=40, textvariable=url_var)
 link.pack()
 
 
+
+# Create a frame to hold the buttons side by side
+button_frame = customtkinter.CTkFrame(app)
+button_frame.pack(pady=20)
 #download options
 
-videoOption = customtkinter.CTkButton(app, text="Click here for Video")
-videoOption.pack(padx=20, pady=10)
+videoOption = customtkinter.CTkButton(button_frame, text="Click here for Video")
+videoOption.pack(padx=5, pady=5, side="left")
 
-audioOption = customtkinter.CTkButton(app, text="Click here for just audio" )
-audioOption.pack(padx=15, pady=10)
+audioOption = customtkinter.CTkButton(button_frame, text="Click here for just audio" )
+audioOption.pack(padx=5, pady=5,side="left")
 
 
 
