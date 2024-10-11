@@ -5,6 +5,7 @@ import customtkinter
 import yt_dlp
 import os
 import json
+import time
 
 #path to settings json file
 settings_file = os.path.expanduser("~/Documents/Youtube_Downloader_Settings.json")
@@ -46,25 +47,25 @@ def file_select():
         return None
     
 
-def startDownload():
+def startDownload(download_type):
     folder = settings.get('download_folder', None)
     
     if not folder:
         folder = file_select()
     if folder:
-        try:
             ytlink = link.get()
             output_path = f"{folder}/%(title)s.%(ext)s"
-            command = ["yt-dlp", ytlink,"-f", "bestaudio", "-o", output_path,  "--extract-audio", "--audio-format", "mp3"]
+            if download_type == 'mp3':
+                command = ["yt-dlp", ytlink,"-f", "bestaudio", "-o", output_path,  "--extract-audio", "--audio-format", "mp3"]
+            elif download_type == 'mp4':
+                command = ["yt-dlp", ytlink, "-f", "bestvideo+bestaudio", "-o", output_path]
             process = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,shell=True)
-            stdout, stderr = process.communicate()
             if process.returncode == 0:
-                status_label.config(text="Download")
+                status_label.configure(text="Downloaded!!!!!")
+                
             else:
-                print(f"Error: {stderr.decode()}")
-        except Exception as e: print(e)
+                print("ur not gettign process return code 0")
 
-        #finishLabel.configure(text="Download Error", text_color="red")
 
 
 #sys settings 
@@ -95,10 +96,10 @@ button_frame = customtkinter.CTkFrame(app)
 button_frame.pack(pady=20)
 #download options
 
-videoOption = customtkinter.CTkButton(button_frame, text="Click here for Video")
+videoOption = customtkinter.CTkButton(button_frame, text="Click here to download as MP4 Video", command=lambda: startDownload("mp4"))
 videoOption.pack(padx=5, pady=5, side="left")
 
-audioOption = customtkinter.CTkButton(button_frame, text="Click here for just audio" )
+audioOption = customtkinter.CTkButton(button_frame, text="Click here for MP3 Audio", command=lambda: startDownload("mp3") )
 audioOption.pack(padx=5, pady=5,side="left")
 
 
@@ -116,10 +117,6 @@ folder_label.pack(pady=10)
 status_label = customtkinter.CTkLabel(app, text="")
 status_label.pack()
 
-#download button
-
-download = customtkinter.CTkButton(app, text="Download", command=startDownload)
-download.pack(padx = 10, pady=5)
 
 #finished downloading
 
