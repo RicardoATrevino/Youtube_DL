@@ -69,8 +69,6 @@ def startDownload(download_type):
                 
             else:
                 print("ur not gettign process return code 0")
-                
-
 
 def fade_label(label, current_alpha=1.0, step=0.05,delay=100):
     if current_alpha <= 0:
