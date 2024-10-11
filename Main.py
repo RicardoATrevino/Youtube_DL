@@ -2,7 +2,6 @@ import subprocess
 import tkinter 
 from tkinter import filedialog
 import customtkinter 
-import yt_dlp
 import os
 import json
 import time
@@ -56,16 +55,21 @@ def startDownload(download_type):
             ytlink = link.get()
             output_path = f"{folder}/%(title)s.%(ext)s"
             if download_type == 'mp3':
-                command = ["yt-dlp", ytlink,"-f", "bestaudio", "-o", output_path,  "--extract-audio", "--audio-format", "mp3"]
+                command = ['./yt-dlp.exe', ytlink,"-f", "bestaudio", "-o", output_path,  "--extract-audio", "--audio-format", "mp3"]
+
             elif download_type == 'webm':
-                command = ["yt-dlp", ytlink, "-f", "bestvideo+bestaudio", "-o", output_path]
-                
-            process = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,shell=True)
+                command = ['./yt-dlp.exe', ytlink, "-f", "bestvideo+bestaudio", "-o", output_path]
+
+            #legacy code when yt-dlp is in PATH
+            # process = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,shell=True)
+            process = subprocess.run(command, stdout=subprocess.PIPE)
+            
             if process.returncode == 0:
                 fade_text.configure(text="Downloaded!!!!!")
                 
             else:
                 print("ur not gettign process return code 0")
+                
 
 
 def fade_label(label, current_alpha=1.0, step=0.05,delay=100):
@@ -81,6 +85,8 @@ def fade_label(label, current_alpha=1.0, step=0.05,delay=100):
     label.configure(text_color=f"#{color_value:02x}{color_value:02x}{color_value:02x}")
     # Call fade_label again after a delay
     label.after(delay, fade_label, label, current_alpha)
+
+
 
 #sys settings 
 customtkinter.set_appearance_mode("System")
