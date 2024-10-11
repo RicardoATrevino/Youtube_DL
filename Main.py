@@ -57,16 +57,30 @@ def startDownload(download_type):
             output_path = f"{folder}/%(title)s.%(ext)s"
             if download_type == 'mp3':
                 command = ["yt-dlp", ytlink,"-f", "bestaudio", "-o", output_path,  "--extract-audio", "--audio-format", "mp3"]
-            elif download_type == 'mp4':
+            elif download_type == 'webm':
                 command = ["yt-dlp", ytlink, "-f", "bestvideo+bestaudio", "-o", output_path]
+                
             process = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,shell=True)
             if process.returncode == 0:
-                status_label.configure(text="Downloaded!!!!!")
+                fade_text.configure(text="Downloaded!!!!!")
                 
             else:
                 print("ur not gettign process return code 0")
 
 
+def fade_label(label, current_alpha=1.0, step=0.05,delay=100):
+    if current_alpha <= 0:
+        label.configure(text="")
+        return
+
+# Calculate new color by reducing opacity (fade effect)
+    current_alpha = max(0, current_alpha - step)
+    color_value = int(255 * current_alpha)  # Convert alpha to 0-255 range
+    
+    # Set label text color
+    label.configure(text_color=f"#{color_value:02x}{color_value:02x}{color_value:02x}")
+    # Call fade_label again after a delay
+    label.after(delay, fade_label, label, current_alpha)
 
 #sys settings 
 customtkinter.set_appearance_mode("System")
@@ -78,6 +92,15 @@ customtkinter.set_default_color_theme("blue")
 app = customtkinter.CTk()
 app.geometry("720x480")
 app.title("Youtube Downloader")
+
+
+# Create a label
+fade_text = customtkinter.CTkLabel(app, text="")
+fade_text.pack()
+
+# Start fading after 2 seconds
+app.after(3000, fade_label, fade_text)  # Delay of 2000ms before starting the fade
+
 
 #adding ui elements
 
@@ -96,11 +119,11 @@ button_frame = customtkinter.CTkFrame(app)
 button_frame.pack(pady=20)
 #download options
 
-videoOption = customtkinter.CTkButton(button_frame, text="Click here to download as MP4 Video", command=lambda: startDownload("mp4"))
+videoOption = customtkinter.CTkButton(button_frame, text="Download as WEBM Video", command=lambda: startDownload("webm"))
 videoOption.pack(padx=5, pady=5, side="left")
 
-audioOption = customtkinter.CTkButton(button_frame, text="Click here for MP3 Audio", command=lambda: startDownload("mp3") )
-audioOption.pack(padx=5, pady=5,side="left")
+audioOption = customtkinter.CTkButton(button_frame, text="Download as MP3 Audio", command=lambda: startDownload("mp3") )
+audioOption.pack(padx=5, pady=5,side="right")
 
 
 
@@ -113,15 +136,11 @@ loaded_folder = settings.get('download_folder', "No folder selected.")  # Load s
 folder_label = customtkinter.CTkLabel(app, text=f"Download folder: {loaded_folder}")
 folder_label.pack(pady=10)
 
+
 # Status Label
 status_label = customtkinter.CTkLabel(app, text="")
 status_label.pack()
 
-
-#finished downloading
-
-finishLabel = customtkinter.CTkLabel(app, text="")
-finishLabel.pack()
 
 #run app
 
