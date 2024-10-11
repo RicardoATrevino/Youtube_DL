@@ -55,10 +55,10 @@ def startDownload(download_type):
             ytlink = link.get()
             output_path = f"{folder}/%(title)s.%(ext)s"
             if download_type == 'mp3':
-                command = ['./yt-dlp.exe', ytlink,"-f", "bestaudio", "-o", output_path,  "--extract-audio", "--audio-format", "mp3"]
+                command = ['./yt-dlp.exe', ytlink,"-f", "bestaudio", "-o", output_path,  "--extract-audio", "--audio-format", "mp3", "--yes-playlist"]
 
             elif download_type == 'webm':
-                command = ['./yt-dlp.exe', ytlink, "-f", "bestvideo+bestaudio", "-o", output_path]
+                command = ['./yt-dlp.exe', ytlink, "-f", "bestvideo+bestaudio", "-o", output_path,  "--yes-playlist"]
 
             #legacy code when yt-dlp is in PATH
             # process = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,shell=True)
