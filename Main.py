@@ -20,7 +20,6 @@ if os.path.exists(settings_file):
     print(f"Settings file found: {settings_file}")
     with open(settings_file, 'r') as file:
         settings = json.load(file)
-        print("Settings file loaded successfully.")
 else:
     print(f"Settings file not found. Creating new settings file at: {settings_file}")
     settings = default_settings
@@ -51,7 +50,9 @@ def startDownload(download_type):
     
     if not folder:
         folder = file_select()
+        fade_text.configure(text="no settings folder found... creating one now...")
     if folder:
+            
             ytlink = link.get()
             output_path = f"{folder}/%(title)s.%(ext)s"
             if download_type == 'mp3':
@@ -72,7 +73,7 @@ def startDownload(download_type):
 
 def fade_label(label, current_alpha=1.0, step=0.05,delay=100):
     if current_alpha <= 0:
-        label.configure(text="")
+        label.configure(text="", text_color="white")
         return
 
 # Calculate new color by reducing opacity (fade effect)
@@ -103,7 +104,7 @@ fade_text = customtkinter.CTkLabel(app, text="")
 fade_text.pack()
 
 # Start fading after 2 seconds
-app.after(3000, fade_label, fade_text)  # Delay of 2000ms before starting the fade
+app.after(5000, fade_label, fade_text)  # Delay of 2000ms before starting the fade
 
 
 #adding ui elements
