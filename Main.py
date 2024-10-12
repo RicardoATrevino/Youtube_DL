@@ -6,14 +6,25 @@ import os
 import json
 import time
 
+#path to yt-dlp
+yt_dlp_executable = os.path.join(os.path.dirname(__file__), 'resources', 'yt-dlp.exe')
+
+
+
+
 #path to settings json file
-settings_file = os.path.expanduser("~/Documents/Youtube_Downloader_Settings.json")
+settings_directory = os.path.expanduser(os.path.join("~", "Documents", "Youtube_Downloader"))
+settings_file = os.path.join(settings_directory, "Youtube_Downloader_Settings.json")
 
 #default settings dictionary
 default_settings = {
-    "path": os.path.expanduser("~/Documents/Youtube_Downloader_Settings.json")
+    "path" : settings_file 
 }
 
+#ensuring directory exists
+if not os.path.exists(settings_directory):
+    print(f"Directory not found. Creating directory at: {settings_directory}")
+    os.makedirs(settings_directory)
 
 #Load settings from the JSON file. or create if non existant
 if os.path.exists(settings_file):
@@ -56,10 +67,10 @@ def startDownload(download_type):
             ytlink = link.get()
             output_path = f"{folder}/%(title)s.%(ext)s"
             if download_type == 'mp3':
-                command = ['./yt-dlp.exe', ytlink,"-f", "bestaudio", "-o", output_path,  "--extract-audio", "--audio-format", "mp3", "--yes-playlist"]
+                command = [yt_dlp_executable, ytlink,"-f", "bestaudio", "-o", output_path,  "--extract-audio", "--audio-format", "mp3", "--yes-playlist"]
 
             elif download_type == 'webm':
-                command = ['./yt-dlp.exe', ytlink, "-f", "bestvideo+bestaudio", "-o", output_path,  "--yes-playlist"]
+                command = [yt_dlp_executable, ytlink, "-f", "bestvideo+bestaudio", "-o", output_path,  "--yes-playlist"]
 
             #legacy code when yt-dlp is in PATH
             # process = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,shell=True)
