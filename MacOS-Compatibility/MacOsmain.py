@@ -3,13 +3,27 @@ import tkinter
 from tkinter import filedialog
 import customtkinter 
 import os
+import platform
 import json
 import time
+import sys
 
-#path to yt-dlp
-yt_dlp_executable = os.path.join(os.path.dirname(__file__), 'resources', 'yt-dlp.exe')
+def resource_path(relative_path):
+    """ Get the absolute path to the resource, works for PyInstaller and normal execution """
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)
+
+yt_dlp_executable = resource_path("resources/yt-dlp")
+print(yt_dlp_executable)
 
 
+if getattr(sys, 'frozen', False):
+    # Use ffmpeg from the 'resources' folder in the bundled app
+    ffmpeg_path = os.path.join(sys._MEIPASS, "resources", "ffmpeg")
+else:
+    # Path for running in development mode
+    ffmpeg_path = os.path.join(sys._MEIPASS, "resources", "ffmpeg")
 
 
 #path to settings json file
@@ -67,10 +81,10 @@ def startDownload(download_type):
             ytlink = link.get()
             output_path = f"{folder}/%(title)s.%(ext)s"
             if download_type == 'mp3':
-                command = [yt_dlp_executable, ytlink,"-f", "bestaudio", "-o", output_path,  "--extract-audio", "--audio-format", "mp3", "--yes-playlist"]
+                command = [yt_dlp_executable, ytlink,"-f", "bestaudio", "-o", output_path,  "--extract-audio", "--audio-format", "mp3", "--yes-playlist", "--ffmpeg-location", ffmpeg_path]
 
             elif download_type == 'webm':
-                command = [yt_dlp_executable, ytlink, "-f", "bestvideo+bestaudio", "-o", output_path,  "--yes-playlist"]
+                command = [yt_dlp_executable, ytlink, "-f", "bestvideo+bestaudio", "-o", output_path,  "--yes-playlist", "--ffmpeg-location", ffmpeg_path]
 
             #legacy code when yt-dlp is in PATH
             # process = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,shell=True)
