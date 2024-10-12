@@ -10,3 +10,10 @@ I originally made this app bc i dislike how online converters work.
           
           to-do:
                     add progress bar
+
+intall dependencies 
+
+          pip install -r requirements.txt -e <your current environment>
+--
+  
+          pyinstaller --onefile --add-data "resources;resources" main.py
